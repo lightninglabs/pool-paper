@@ -71,7 +71,7 @@ keys]{cryptocode}
     \small{johan@lightning.engineering}
 }
 
-\date{\today \\~\\ DRAFT (commit \gitAbbrevHash)}
+\date{November 2nd, 2020 \\~\\ DRAFT (commit \gitAbbrevHash)}
 \maketitle
 
 \begin{abstract}
@@ -357,9 +357,9 @@ be able to facilitate payments in the network. (move much of that intro about
 the nodes here instead?). As routing nodes incur an opportunity cost by
 committing capital to the network, they specify a fee $F$ to be paid upon
 completion of a successful payment forward. This fee $F = F_{base} +
-F_{rate}*A_{sat}$ is comprised of two parts: a proportional amount (a rate) and
-a fixed amount, which are both expressed in \emph{millisatoshis}, which are
-$1/1000$ of the base satoshi unit.
+F_{rate} \cdot A_{sat}$ is comprised of two parts: a proportional amount (a
+rate) and a fixed amount, which are both expressed in \emph{millisatoshis},
+which are $1/1000$ of the base satoshi unit.
 
  Note that routing nodes are not compensated on an ongoing basis, and are not
  compensated for anything other than a completed payment. As a result, many
@@ -781,11 +781,11 @@ upon this base double-call auction by leveling the informational playing field
 \cite{milgromSealedBid} by making all orders \emph{sealed-bid}. Rather than the
 auction being cleared continually within a central-limit order book, we instead
 opt to utilize a discrete interval, frequent batched auction so as to mitigate
-front-running and other undesirable side effects. Rather than participants
-paying what they bid (commonly called a pay-as-you-bid auction), all
-participants will instead pay the same \emph{uniform clearing price}. Finally,
-all operations that result from a successful auction are batched and committed
-in a \emph{single} atomic blockchain transaction.
+front-running and other undesirable side effects \cite{hftBatch}. Rather than
+participants paying what they bid (commonly called a pay-as-you-bid auction),
+all participants will instead pay the same \emph{uniform clearing price}.
+Finally, all operations that result from a successful auction are batched and
+committed in a \emph{single} atomic blockchain transaction.
 
 \clearpage
 
@@ -983,7 +983,7 @@ Lightning Channel Lease:
 \end{itemize}
 
 Note that the premium $R_{P}$ as referenced above is parametrized in using the
-\emph{lease duration} $D_{blocks}$: $R_{P}(D_{blocks}) = r_i * D_{blocks}$ as
+\emph{lease duration} $D_{blocks}$: $R_{P}(D_{blocks}) = r_i \cdot D_{blocks}$ as
 we deal in simple, rather than compounding, interest.  The duration of the
 contract $D_{blocks}$ is of great interest, as similar to U.S Treasury
 auctions, a \emph{yield-curve} can be constructed based on the matched
@@ -1100,9 +1100,9 @@ We define an \texttt{Order} within the context of a \texttt{CLM} as follows:
             preference matching within the system.
 
         \item $M_{pub}$ is the multi-sig public key to be used when creating
-            the funding output (cite) of the channel. % abstract out more?
+            the funding output of the channel. % abstract out more?
 
-        \item $L_{pub}$ is the identity public key (cite) of the Lightning
+        \item $L_{pub}$ is the identity public key of the Lightning
             Node that wishes to buy/sell this channel.
 
         \item $A_{addr}$ is the network address to be used to connect to the
@@ -1138,7 +1138,7 @@ they're looking to buy or sell.
 
 Returning back to our tag $T_{auth}$, we will now specify how such a tag is to
 be computed, and verified. In the abstract, we require that the tagging scheme
-is \seufcma \enspace secure (cite). Given this security requirement, we define
+is \seufcma \enspace secure. Given this security requirement, we define
 two polynomial-time algorithms: (\texttt{GenOrderTag}, \texttt{VerifyOrderTag})
 with the following requirements:
 
@@ -1271,8 +1271,8 @@ properly matched orders. $\Theta_a$ represents an order with $O_{type} =
 \texttt{Ask}$, while $\Theta_b$ represents an order with $O_{type} =
 \texttt{Bid}$. Note that since we allow \emph{partial} matches, a given order
 may appear multiple times in the final match set. We require that a valid
-implementation be able to perform proper \emph{multi-attribute} (cite) matching
-due to the existence of the $\Delta_{aux}$ portion of an order's structure. \\
+implementation be able to perform proper \emph{multi-attribute} matching due to
+the existence of the $\Delta_{aux}$ portion of an order's structure. \\
 
 % state the specified constraints as a linear program??
 
@@ -1281,9 +1281,10 @@ due to the existence of the $\Delta_{aux}$ portion of an order's structure. \\
 \texttt{MarketClearingPrice} algorithm accepts the set of orders matched by the
 \texttt{MatchMake} algorithm and returns the \emph{market clearing price} of
 the prior batch. The precise market clearing price algorithm is left as a free
-parameter, with algorithms such as first-rejected-bid (cite) or
-last-accepted-bid (cite) likely being used. Utilizing a single market clearing
-price is intended to promote fairness (cite) (all traders pay the same price!). \\
+parameter, with algorithms such as first-rejected-bid or last-accepted-bid
+likely being used. Utilizing a single market clearing price is intended to
+promote fairness and has a number of additional benefits over pay-as-bid
+auctions \cite{payAsBid}. \\
 
 % give example of FRB and/or LAB here?
 
@@ -1330,34 +1331,6 @@ transaction in the target base blockchain. Once the batch has been confirmed,
 all operations contained within a batch are considered executed, and can be
 used as inputs to additional iterations of the auction life cycle.
 
-% have it return the batch ID? batch ID not shown any where there?
-
-% have auction attribute section enumerating all from the blog post spill over
-% portion?
-
-
-\iffalse
-shadow chain section:
-  * define as state machine that returns tate, then later define state in specific section to the the input of all the utxos and other state
-
- ShadowChain:
-    * Init() -> lambda params, w/e w/e
-    * state = InitState(auctioneerUtxo)
-    * state = stateStep(state, stateDelta) -- a qurom needed to state step,
-    * propose set of updates to all
-        * for account := range accounts {
-            proopse state
-         }
-     * state_i = UpgradeState(state_i)
-     * state = {operatorKey, k_1, .., k_n}
-     * state = stateFunc(state, proposal, executionEnv)
-          * env can change off-chain, no need to on-chain upgrades, identified by hash/identifier
-     * order of execution func as way to impl soft-forks?
-     * state = coasalce(state_,1, ..., state_n) (transaction cut thru)
-     * quorum = propose(masterKey, accounts)
-     * ^ then state func
-\fi
-
 \section{The Shadowchain: A Bitcoin Overlay Application Framework}
 
 In this section, we present the concept of a \texttt{Shadowchain}, a
@@ -1367,8 +1340,8 @@ of independent interest, as they're a novel way to layer more complex
 interactions on top of the base Bitcoin blockchain. Shadowchains as we present
 them can be implemented on the base Bitcoin blockchain today without any
 additional changes or enhancements. However, further extensions to Bitcoin such
-as non-interactive signature aggregation (cite) and covenants (cite) could serve
-to dramatically improve scalability properties of shadowchains.
+as cross-input signature aggregation and covenants could serve to dramatically
+improve scalability properties of shadowchains.
 
 \subsection{High-Level Description}
 
@@ -1401,10 +1374,10 @@ UTXOs, which are the end state after the state transition function has been
 evaluated. A shadowchain is even permitted to use \emph{multiple} distinct
 state transition functions. As user funds cannot move without both multi-sig
 signatures, users are able to fully validate (possibly using techniques such as
-zero knowledge proofs (cite shafi)) that the resulting UTXO state was properly
-derived from the known state transition function.  Note that due to this
-structure, complex "exit-games", or fraud proofs are not required as a user
-simply won't sign off on a fraudulent state, and a user's UTXO is always
+zero knowledge proofs that the resulting UTXO state was properly derived
+from the known state transition function.  Note that due to this structure,
+complex "exit-games", or fraud proofs are not required as a user simply
+won't sign off on a fraudulent state, and a user's UTXO is always
 manifested (in its base form) on the main blockchain.
 
 \textbf{Ephemeral Lifted UTXOs}. In the scenario that the shadowchain
@@ -1419,13 +1392,13 @@ or sybil resistance.
 function happens \emph{off-chain}, it's possible to coalesce several distinct
 shadowchain blocks into a single block that combines successive invocations of
 the state transition function. This technique is similar to transaction
-cut-through (cite), but is performed in a multi-party setting. Leveraging this
-technique, the shadowchain orchestrator can optimistically treat the current
-latest shadowchain transaction in the mempool as an in-memory data structure to
-be updated off-chain (via transaction replacement techniques (cite)), with the
-state being "written to disk" once confirmed. As a result, it's possible to
-commit several shadowchain states (possibly hundreds) in a single logical
-Bitcoin transaction.
+cut-through \cite{cutThru} but is performed in a multi-party setting.
+Leveraging this technique, the shadowchain orchestrator can optimistically
+treat the current latest shadowchain transaction in the mempool as an in-memory
+data structure to be updated off-chain (via transaction replacement
+techniques), with the state being "written to disk" once confirmed. As a
+result, it's possible to commit several shadowchain states (possibly hundreds)
+in a single logical Bitcoin transaction.
 
 \textbf{Shadowchain Upgrades}. Finally, similar to the base blockchain, a
 shadowchain can also be \emph{upgraded} in a forward and backward compatible
@@ -1509,9 +1482,9 @@ user's state within a given shadow chain:
 % actually don't use LO here after all?
 
 The construct of a \texttt{Lifted UTXO} is similar to the existing concept of a
-Fidelity Bond (cite) with an application-specific twist. This process is akin
-to creating a new 'account' within a Shadowchain. The time-lock release nature
-of the UTXO means that a user can always recover funds if the
+Fidelity Bond \cite{fidelityBonds} with an application-specific twist. This
+process is akin to creating a new 'account' within a Shadowchain. The time-lock
+release nature of the UTXO means that a user can always recover funds if the
 \texttt{Orchestrator} becomes unresponsive. In addition to this, a natural cost
 in the form of chain fees is added, which increases the barrier for potentially
 malicious users to interact with the shadow chain.
@@ -1708,7 +1681,7 @@ application of the state transition functions on each individual shadowchain
 block. \\
 
 The \texttt{CoalesceBlocks} algorithm is similar to the concept of transaction
-cut-through (cite) for UTXO-based blockchains. Using this algorithm, the
+cut-through \cite{cutThru} for UTXO-based blockchains. Using this algorithm, the
 operator is able to propose a new equivalent block which produces the same set
 of Lifted UTXO outputs along with any other application-specific outputs
 produced by any of the intermediate blocks. This can be done post-facto, and
@@ -1899,8 +1872,8 @@ Now that we have defined the set of initialization and manipulation methods for
 our batch key parameter, we'll move onto the initialization of the remaining
 system. In order to prevent key-reuse across the entire system, we employ a
 similar key-derivation scheme to that of the Lightning Network's current
-commitment transaction format (cite). This key derivation will be used within
-all account scripts within the system, as well as the auctioneer's main
+commitment transaction format \cite{bolt3}. This key derivation will be used
+within all account scripts within the system, as well as the auctioneer's main
 account. \\
 
 First, we define a helper function for deriving the auctioneer's current key
@@ -1913,7 +1886,7 @@ $[B_{k_0}]N_{b}$. We define the \texttt{auctioneerScript} as follows:
 
 \begin{pcvstack}[boxed,center, space=1em]
     \procedure[linenumbering, syntaxhighlight=auto]{\texttt{auctioneerScript($A_{pk}, B_{k_i}$)}}{
-        A_{pk_i} \gets A_{pk} + H(A_{pk} \concat B_{k_i}) \\
+        A_{pk_i} \gets A_{pk} + G \cdot H(A_{pk} \concat B_{k_i}) \\
         return \texttt{OP\_CHECKSIG $A_{pk_i}$}
     }
 \end{pcvstack}
@@ -1966,8 +1939,8 @@ for a given trader:
 \begin{pcvstack}[boxed,center, space=1em]
     \procedure[linenumbering, syntaxhighlight=auto]{\texttt{traderAcctScript($P_{t}, S_{t}, P_{A}, B_{k_i}$)}}{
         t \gets H(B_{k_i} \concat S_{t} \concat P_{t}) \\
-        P_{t}^\prime \gets P_{t} + (t * G) \\
-        P_{A}^\prime \gets P_{A} + H(P_{t}^\prime \concat P_{A}) * G \\
+        P_{t}^\prime \gets P_{t} + (t \cdot G) \\
+        P_{A}^\prime \gets P_{A} + H(P_{t}^\prime \concat P_{A}) \cdot G \\
         \texttt{witnessScript} \gets \{ \\
             \t P_{t}^\prime \enspace \texttt{OP\_CHECKSIGVERIFY} \\
             \t P_{A}^\prime \enspace \texttt{OP\_CHECKSIG} \\
@@ -2008,7 +1981,7 @@ implementation of the set of \texttt{Account Operations} methods:
 \begin{pcvstack}[boxed,center,space=1em]
     \procedure[linenumbering, syntaxhighlight=auto, addkeywords={await}]{\texttt{NewAccount($1^{\lambda}, P_{auction_p}$)}}{
         k_{t} \sample \mathbb{Z}_{p} \\
-        P_{t} \gets k_{t} * G \\
+        P_{t} \gets k_{t} \cdot G \\
         \texttt{acctScript} \gets \texttt{traderAcctScript($P_{t}, S_{t}, P_{A}, B_{k_i}$)} \\
         \texttt{accountTxn} \gets \texttt{makeTxn(acctScript)} \\
         \texttt{traderSignTxn(accountTxn)}\\
@@ -2066,7 +2039,7 @@ The unique component that sets apart a regular channel from one that was
 created via a channel lease contract is \emph{duration} enforcement. As a
 channel lease contracts states the capital must be committed to the network for
 a minimum period of time, in order to implement this in a trust-minimized
-manner, we must enhance the existing channel format (cite) used in the
+manner, we must enhance the existing channel format \cite{bolt3} used in the
 Lightning Network today. Our tool of choice for creating minimum duration
 enforced channels is the \texttt{OP\_CHECKLOCKTIMEVERIFY} \cite{cltvBip}
 op-code. Our construction is similar to the one proposed in \cite{zTowards}
@@ -3027,6 +3000,12 @@ a new form of yield bearing instrument for the greater Bitcoin ecosystem.
     \url{https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki},
     Aug 10, 2016
 
+\bibitem{cutThru}
+    gmaxwell,
+    \textit{Transaction cut-through},
+    \url{https://bitcointalk.org/index.php?topic=281848.0},
+    Aug 10, 2016
+
 \bibitem{bolt2}
     Lightning Network Developers,
     \textit{BOLT \#2: Peer Protocol for Channel Management},
@@ -3046,6 +3025,18 @@ a new form of yield bearing instrument for the greater Bitcoin ecosystem.
     Lightning Network Developers,
     \textit{BOLT \#7: P2P Node and Channel Discovery},
     \url{https://github.com/lightningnetwork/lightning-rfc/blob/master/07-routing-gossip.md},
+
+\bibitem{payAsBid}
+    Alfred E. Kahn, Peter C. Cramton, Robert H. Porter, Richard D. Tabors
+    \textit{Uniform Pricing or Pay-as-Bid Pricing: A Dilemma for California and Beyond},
+    \url{ftp://cramton.umd.edu/papers2000-2004/kahn-cramton-porter-tabors-uniform-or-pay-as-bid-pricing-ej.pdf},
+    2001
+
+\bibitem{hftBatch}
+    Eric Budish, Peter Cramton, John Shim,
+    \textit{THE HIGH-FREQUENCY TRADING ARMS RACE: FREQUENT BATCH AUCTIONS AS A MARKET DESIGN RESPONSE},
+    \url{https://faculty.chicagobooth.edu/eric.budish/research/HFT-FrequentBatchAuctions.pdf},
+    November 2015
 
 \bibitem{bitThor}
     Bitrefill,
