@@ -132,11 +132,11 @@ all forwards independent of payment size, and a fee rate or proportional amount
 that must be paid for each millionth of a satoshi forwarded \cite{bolt7}. We
 refer to nodes that join in order to facilitate payments and collect forwarding
 fees as \emph{routing nodes}. In order to forward a payment of size $N$ on the
-network, a routing node needs to have $N_{in} - F$ Bitcoin allocated
+network, a routing node needs to have $N_{in} + F$ Bitcoin allocated
 \emph{towards} it as inbound bandwidth, and $N_{out}$ Bitcoin allocated to
 another node as outbound bandwidth. The factor of $F$ is the fee collected by
-the routing node, with the following constraint being met $F = N_{out} -
-N_{in}$. Due to this requirement that there be sufficient inbound \emph{and}
+the routing node, with the following constraint being met $F = N_{in} -
+N_{out}$. Due to this requirement that there be sufficient inbound \emph{and}
 outbound bandwidth, even those nodes that exist solely to help other nodes send
 and receive payments, themselves face the inbound bandwidth allocation problem,
 a fundamental bootstrapping issue for the LN.
@@ -393,7 +393,7 @@ routing nodes. This is due to the fact that in order to be able to forward a
 payment of size $P_{sat}$, the routing node must first have $P_{sat_{out}}$
 satoshis committed as \emph{outbound} payment bandwidth (to use for sending)
 and $P_{sat_{in}}$ committed as \emph{inbound} payment bandwidth, with the
-difference of the two amounts, $F= P_{sat_{out}} -  P_{sat_{in}}$ being collected
+difference of the two amounts, $F = P_{sat_{in}} -  P_{sat_{out}}$ being collected
 as a forwarding fee upon payment completion. This \emph{pair-wise} capital
 commitment requirement is commonly cited as a major barrier to Lightning
 Network adoption, as well as why large "hubs" are inherently
