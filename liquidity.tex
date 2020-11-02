@@ -345,13 +345,12 @@ locks have expired. \\
 Entities on the Lightning Network that exist primarily to collect fees for
 successfully forwarding payments are referred to as \emph{routing nodes}. A
 routing node commits capital to the network within payment channels in order to
-be able to facilitate payments in the network. (move much of that intro about
-the nodes here instead?). As routing nodes incur an opportunity cost by
-committing capital to the network, they specify a fee $F$ to be paid upon
-completion of a successful payment forward. This fee $F = F_{base} +
-F_{rate} \cdot A_{sat}$ is comprised of two parts: a proportional amount (a
-rate) and a fixed amount, which are both expressed in \emph{millisatoshis},
-which are $1/1000$ of the base satoshi unit.
+be able to facilitate payments in the network.  As routing nodes incur an
+opportunity cost by committing capital to the network, they specify a fee $F$
+to be paid upon completion of a successful payment forward. This fee $F =
+F_{base} + F_{rate} \cdot A_{sat}$ is comprised of two parts: a proportional
+amount (a rate) and a fixed amount, which are both expressed in
+\emph{millisatoshis}, which are $1/1000$ of the base satoshi unit.
 
  Note that routing nodes are not compensated on an ongoing basis, and are not
  compensated for anything other than a completed payment. As a result, many
