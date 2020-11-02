@@ -654,88 +654,79 @@ instrument.
 
 \section{Bootstrapping Problems as Solved by CLM}
 
-Prior to outlining our design for a channel lease marketplace, we seek to provide
-a set of illuminating use cases in order to demonstrate the need for such
-markets on the Lightning Network. Each of these use cases are empirical
-real-world problems related to the Lightning Network, and prior to the
-publication of this document, no known solution has been presented.
+Prior to outlining our design for a channel lease marketplace, we seek to
+provide a set of real-world cases that ddemonstrate the benefit of such markets
+for the Lightning Network. 
 
 \subsection{Bootstrapping New Users via Sidecar Channels}
 
-A common question posed concerning the Lightning Network goes something like:
-Alice is new to Bitcoin entirely, how can she join the Lightning Network
-without her, herself, making any new \emph{on-chain} Bitcoin transactions? It's
-desirable to present a solution to such a use-case as on-boarding for an on-chain
-user is as simple as sending coins to a fresh address. In order for
-off-chain payment channel networks to achieve wide-spread usage, a similar,
-seamless on-boarding flow must exist.
+A common question concerning the Lightning Network goes something like: Alice
+is new to Bitcoin entirely, how can she join the Lightning Network without
+making any new \emph{on-chain} Bitcoin transactions? On-boarding for a
+non-Lightning Bitcoin user is as simple as sending coins to a fresh address.
+For off-chain payment channel networks to achieve widespread usage, a similar,
+seamless on-boarding flow should exist.
 
-We frame the solution to this use-case in our model of channel liquidity
+We frame the solution to this use case in our model of channel liquidity
 markets. In this case, Alice is a \emph{new} user to the network that requires
 \emph{inbound} and \emph{outbound} liquidity. Without outbound liquidity, she's
 unable to send to any other node on the network. Without inbound liquidity,
-she's unable to receive any further payments on the network. "Sidecar channels"
-allow an acquaintance of Alice, let's call her
-Carol, to engage in a protocol with an existing routing node on the network,
-Bob, to provide \emph{both} inbound and outbound liquidity for Alice. Carol is
-able to provide liquidity either with an off-chain, or on-chain payment. At the
-end of the engagement, Carol has provided channel liquidity to Alice via Bob,
-who himself is compensated accordingly for his role in the protocol.
+she's unable to receive payments via the network. "Sidecar channels" allow an
+acquaintance of Alice, let's call her Carol, to engage in a protocol with an
+existing routing node on the network, Bob, to provide \emph{both} inbound and
+outbound liquidity for Alice. Carol is able to provide liquidity with an
+off-chain, or on-chain payment. At the end of the engagement, Carol has
+provided channel liquidity to Alice via Bob, who himself is compensated
+accordingly for his role in the protocol.
 
 \subsection{Demand Fueled Routing Node Channel Selection}
 
 A "routing" node on the Lightning Network is a node categorized as having a
-persistent publicly reachable Internet address, a set of inbound channels from
-leaf nodes, and one which seeks to actively facilitate payment flows on the
-network in order to gain fee revenue using existing liquidity as
-bandwidth for these payment flows. A common question asked in the initial
-bootrapping phase of the Lighting Network by node operators is: "where should I
-open my channels to, such that they'll actually be routed through"? We posit
-that channel liquidity markets are the answer to this question.
+persisten, publicly reachable Internet address, a set of inbound channels from
+leaf nodes, and an intention to actively facilitate payment flows on the
+network in return for fee revenue. A common question asked in the initial
+bootstrapping phase of the Lighting Network by node operators is: "where should
+I open my channels to, such that they'll actually be routed through"? We posit
+that channel liquidity markets provide the answer to this question.
 
-The channel liquidity market answer to this question is supplementary to
-autopilot \cite{autopilot} techniques for automated channel creation based on
-static and dynamic graph signals. A key drawback of autopilot channel
-establishment techniques is that for the most part, they're devoid of
-\emph{economic} context. A particular location in the sub-graph may be "fit" or
-attractive from a graph theoretic perspective, but may not lead to a high
-velocity channel, as there was no inherent demand for a channel created at that
-particular location. Using a CLM, a node operator can enter a targeted venue to
-determine what the \emph{time value} of his liquidity is on the network. New
-services such as exchanges or merchants on the network can bid for the node's
-liquidity in order to serve their prospective customers, with the node earning
-a small interest rate up-front for committing his liquidity in the first place
-(scaled by the worst-case CSV delay).
+Channel liquidity markets can be combined with autopilot \cite{autopilot}
+techniques that automatically manage channel creation based on static and
+dynamic graph signals. A key drawback of autopilot techniques alone is that for
+the most part, they're devoid of \emph{economic} context. A particular location
+in the sub-graph may be "fit" or attractive from a graph theoretic perspective,
+but may not lead to a high velocity channel, as there might not be inherent
+demand for a channel created at that particular location. Using a CLM, a node
+operator can enter a targeted venue to determine what the \emph{time value} of
+his liquidity is on the network. New services such as exchanges or merchants on
+the network can bid for the node's liquidity in order to serve their
+prospective customers, with the node earning a small interest rate up-front for
+committing his liquidity in the first place (scaled by the worst-case CSV
+delay).
 
 \subsection{Bootstrapping New Services to Lightning}
 
-Any new service that wishes join the Lightning Network faces the same problem:
-"How can I incentivize nodes to create \emph{inbound} channels to me in order
-to be able to accept payments?". CLMs provide an elegant solution. The
-merchant/exchange/service uses their existing on-chain funds to enter the
-liquidity marketplace in order to exchange their on-chain coins for off-chain
-coins. Once the trade has been atomically executed, the merchant immediately
-has usable inbound liquidity that can be used to accept payments from users.
-
-The merchant can then use its prior marketplace exchange partners as
-"introduction" points. As it's undesirable for all users to connect directly to
-the merchant for payment connectivity, users can instead establish channels to
-the prior swapping partners of the service. As the merchant acquires more
-liquidity in the future, they further contribute to the path diversity and
-strength of the network, allowing users to pay via several introduction points
-using AMP \cite{amp}.
+Any new service operator or merchant that wishes join the Lightning Network
+faces the same problem: "How can I incentivize nodes to create \emph{inbound}
+channels to my node in order to be able to accept payments?". CLMs provide an
+elegant solution. The merchant/exchange/service uses their existing on-chain
+funds to enter the liquidity marketplace in order to exchange their on-chain
+coins for off-chain coins. Once the trade has been atomically executed, the
+merchant immediately has usable inbound liquidity that can be used to accept
+payments from users. As the merchant acquires more liquidity and more channels
+in the future, they make additional contributions to the path diversity and
+strength of the network. 
 
 \subsection{Cross-Chain Market Maker Liquidity Sourcing}
 
-As traders are becoming more aware of the counterparty risk of trading on
-centralized exchanges, they are looking to non-custodial exchange venues. The
-flexibility of channels on the Lightning Network appears to be a prime
-candidate of such a venue: channels allow for non-custodial trading at similar
-execution speeds to that of centralized exchanges. Additionally, channel based
-non-custodial exchanges are not vulnerable to front-running tactics executed by
-miners. Instead, the trade execution and even the prior trade history are
-\emph{only} known to the participants, providing a greater degree of
-financial privacy.
+As currency traders become more aware of the counterparty risk of trading on
+centralized exchanges, they become more motivated to find non-custodial
+exchange venues. The flexibility of channels on the Lightning Network make it a
+desirable platform for such a venue: channels allow for non-custodial trading
+at similar execution speeds to that of centralized exchanges. Additionally,
+channel based non-custodial exchanges are not vulnerable to front-running
+tactics executed by miners that can occur with other non-custodial concepts.
+Instead, the trade execution and even the prior trade history are \emph{only}
+known to the participants, providing a greater degree of financial privacy.
 
 Once again, we encounter a bootstrapping issue. How is a market maker on a
 payment channel-based non-custodial exchange meant to gather an initial pool of
@@ -750,48 +741,49 @@ atomic swaps.
 
 \subsection{Instant Lightning Wallet User On Boarding}
 
-Wallets commonly face the UX challenge of ensuring a user can receive funds as
-soon as they set up a wallet. Some wallet providers have chosen to open new
-inbound channels to users themselves. This gives users the inbound bandwidth
-they need to receive, but can come at a high capital cost to the wallet
-provider as they need to commit funds at a 1:1 ratio. A CLM like Lightning Pool would
-allow wallet developers to
-lower their customer acquisition costs, as they would need to pay only a percentage of
-the funds to be allocated to a new user. Just like the merchant purchasing
-inbound liquidity in the above segment, a wallet provider could pay something like
-one thousand satoshis to have one million
-satoshis allocated to a user, instead of fronting the entire one million satoshis
+Wallets commonly face the UX challenge of ensuring that a user can receive
+funds as soon as they set up a wallet. Some wallet providers have chosen to
+open new inbound channels to users themselves. This gives users the inbound
+bandwidth they need to receive, but can come at a high capital cost to the
+wallet provider as they need to commit funds at a 1:1 ratio. A CLM like
+Lightning Pool would allow wallet developers to lower their customer
+acquisition costs, as they would need to pay a relatively small amount relative
+to the volume of liquidity to be allocated to a new user. Just like the
+merchant purchasing inbound liquidity in the above segment, a wallet provider
+could pay something like one thousand satoshis to have one million satoshis
+allocated to a user, instead of fronting the entire one million satoshis
 themselves.
 
 \subsection{Variance Reduction in Routing Node Revenue}
 
-Today, routing node operators aim to join the network in order to facilitate the
-transfer of payments as well as to earn fees over time by successfully facilitating
-payments. However, if a node isn't regularly routing payments (thereby earning
-a forwarding fee), then they aren't compensated for the various (though minor)
-risks they expose their capital to. With Pool, routing node operators are able
-to ensure that they're consistently compensated for their cost of capital.
+Today, routing node operators aim to join the network in order to facilitate
+the transfer of payments as well as to earn fees over time by successfully
+facilitating payments. However, if a node isn't regularly routing payments
+(thereby earning a forwarding fee), then they aren't compensated for the
+various (though minor) risks they expose their capital to. With Pool, routing
+node operators are able to ensure that they're predictably compensated for the
+cost of their capital.
 
 \section{The Channel Lease Marketplace} %definition
 
 In this section, we present an overview of the Channel Lease Marketplace
 architectural design. In section 6, we make a brief detour to define the
-\emph{Shadow Chain} application framework, before presenting a concrete
-instantiation of a CLM, in the form of \textbf{Lightning Pool}.
+\emph{Shadowchain} application framework, before presenting a concrete
+instantiation of a CLM in the form of \textbf{Lightning Pool}.
 
 \subsection{High-Level Description}
 
 First, we describe our solution at a high-level. Drawing heavily from existing
 market auction design, we're interested specifically in double-call auctions
-which allow both the buyer and the seller to buy/sell \emph{indivisible} units
+that allow both the buyer and the seller to transact \emph{indivisible} units
 of the good in question, which in this case is a channel lease. We then build
-upon this base double-call auction by leveling the information playing field
+upon this base double-call auction by leveling the informational playing field
 \cite{milgromSealedBid} by making all orders \emph{sealed-bid}. Rather than the
 auction being cleared continually within a central-limit order book, we instead
-opt to utilize a discrete interval frequent batched auction in order to
-mitigate front-running and other undesirable aspects. Rather than participants
+opt to utilize a discrete interval, frequent batched auction so as to mitigate
+front-running and other undesirable side effects. Rather than participants
 paying what they bid (commonly called a pay-as-you-bid auction), all
-participants will instead pay the same \emph{uniform clearing price}.  Finally,
+participants will instead pay the same \emph{uniform clearing price}. Finally,
 all operations that result from a successful auction are batched and committed
 in a \emph{single} atomic blockchain transaction.
 
@@ -826,14 +818,13 @@ in a \emph{single} atomic blockchain transaction.
 We assume the existence of a \emph{non-trusted} auctioneer $\Lambda$ that
 publishes a master auctioneer key $A_{auction}$ ahead of time. The auction
 itself is uniquely identified by $A_{auction}$ from the perspective of the
-system due to its \emph{Shadow Chain} qualities. The auctioneer implements a
-non-custodial auction via \texttt{Marketplace Accounts} which use a new unique
+system due to its \emph{Shadowchain} qualities. The auctioneer implements a
+non-custodial auction via \texttt{Marketplace Accounts} that use a new unique
 key derived from $A_{auction}$ as the second public key in the 2-of-2
-multi-sig. The auctioneer accepts and validates orders off-chain, aides an
-agent in modifying their account before expiration, proposes a valid batch to
-each of the agents matched in an instance of the auction, and produces a batch
-execution transaction which modifies accounts appropriately, and creates a
-series of corresponding channel leases.
+multi-sig. The auctioneer accepts and validates orders off-chain, facilitates
+required account modifications, proposes a valid batch to each of the agents
+matched in an instance of the auction, and produces a batch execution
+transaction that creates the series of corresponding channel leases.
 
 \begin{center}
     \textbf{Account Creation}
@@ -844,7 +835,7 @@ first create a \texttt{Marketplace Account}. A \texttt{Marketplace Account} is
 a non-custodial account that forces an agent to commit capital in the form of
 Bitcoin to the market for a period of time. As we require agents to fully back
 all orders within an account, we eliminate a number of order spoofing vectors.
-Additionally, the time-locked non-custodial nature of the account ensures a user
+Additionally, the time-locked, non-custodial nature of the account ensures a user
 is able to recover their funds fully without any additional on-chain
 transactions (aside from the sweeping transaction).
 
@@ -852,13 +843,13 @@ transactions (aside from the sweeping transaction).
     \textbf{Marketplace Order Units}
 \end{center}
 
-We abstract over the base satoshi unit and define a \texttt{unit} from the PoV
-of the marketplace which is the base unit in which all orders are expressed and
-settled in. We assume that the value of a given \texttt{unit} is set such that
-even a single lease of the smallest unit is still economical from the
-perspective of the base blockchain and on-chain fees. All orders \emph{must} be
-divisible by a whole unit, and the final clearing volume of a given batch is
-also expressed in units.
+We abstract over the base Bitcoin satoshi unit and define a \texttt{unit} from
+the point-of-view of the marketplace that serves as the base unit that all
+orders are expressed in and settled in. We assume that the value of a given
+\texttt{unit} is set such that even a single lease of the smallest unit is
+still economical from the perspective of the base blockchain and on-chain fees.
+All orders \emph{must} be divisible by a whole unit, and the final clearing
+volume of a given batch is also expressed in these units.
 
 \begin{center}
     \textbf{Order Submission}
@@ -868,34 +859,34 @@ Once an agent has created a valid \texttt{Marketplace Account}, they can enter
 the order submission phase. It's important to note that this order submission
 takes place \emph{off-chain}. Only the final execution of an auction batch
 takes place on-chain. During the order submission phase, agents are free to
-modify their accounts and orders. Only valid orders will be accepted to be
+modify their accounts and orders. Only valid orders will be accepted as
 eligible for the next auction iteration.
 
 \begin{center}
     \textbf{Market Clearing}
 \end{center}
 
-Every $\Upsilon$ minutes, the auctioneer attempts to \emph{clear} the marketplace.
-An auction can be cleared if the lines of supply and demand cross such that at
-least a single unit is bought/sold. As the market has no explicit closing time,
-it's possible that during a market epoch, no market can be made. In the
-scenario that a market can be made, then rather than each participant pay what
-they bid, the auctioneer instead uses a single clearing price based on the
+Every $\Upsilon$ minutes, the auctioneer attempts to \emph{clear} the
+marketplace.  An auction can be cleared if the lines of supply and demand cross
+such that at least a single unit is bought/sold. As the market has no explicit
+closing time, it's possible that during a market epoch, no market can be made.
+In the scenario that a market can be made, rather than each participant paying
+what they bid, the auctioneer instead uses a single clearing price based on the
 market's clearing price algorithm.
 
 \begin{center}
     \textbf{Batch Execution}
 \end{center}
 
-Once a market has been cleared, we enter the batch execution phase. During this
+Once a market has been cleared, the batch execution phase begins. During this
 phase, the auctioneer sends a batch proposal $\Pi$, which describes the
 proposed market clearing structure. $\Pi$ may either be a plaintext description
-of a valid clearing solution, or a more "argument" describing one.  Valid
-batches are then bundled into a single \texttt{Batch Execution
-Transaction} that updates all involved accounts, and creates any channel leases
-bought/sold in the batch. After a period of time $\Upsilon$ has elapsed, the
-market is restarted with any new orders and accounts being considered for
-market clearing.
+of a valid clearing solution, or an "argument" describing one. Valid batches
+are then bundled into a single \texttt{Batch Execution Transaction} that
+updates all involved accounts, and creates any channel leases initiated within
+the batch. After a period of time $\Upsilon$ has elapsed, the market is
+restarted with any new orders and accounts being considered for market
+clearing.
 
 \subsection{Lightning Channel Leases}
 \begin{center}
