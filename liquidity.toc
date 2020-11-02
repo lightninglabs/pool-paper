@@ -14,7 +14,7 @@
 \contentsline {subsection}{\numberline {4.2}Demand Fueled Routing Node Channel Selection}{13}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Bootstrapping New Services to Lightning}{14}{subsection.4.3}%
 \contentsline {subsection}{\numberline {4.4}Cross-Chain Market Maker Liquidity Sourcing}{14}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Instant Lightning Wallet User On Boarding}{15}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.5}Instant Lightning Wallet User On Boarding}{14}{subsection.4.5}%
 \contentsline {subsection}{\numberline {4.6}Variance Reduction in Routing Node Revenue}{15}{subsection.4.6}%
 \contentsline {section}{\numberline {5}The Channel Lease Marketplace}{15}{section.5}%
 \contentsline {subsection}{\numberline {5.1}High-Level Description}{15}{subsection.5.1}%
@@ -31,7 +31,7 @@
 \contentsline {subsubsection}{\numberline {6.3.2}Lifted UTXOs}{26}{subsubsection.6.3.2}%
 \contentsline {subsubsection}{\numberline {6.3.3}The Shadowchain}{27}{subsubsection.6.3.3}%
 \contentsline {subsubsection}{\numberline {6.3.4}Shadowchain Operation}{30}{subsubsection.6.3.4}%
-\contentsline {section}{\numberline {7}Lightning Pool: A Channel Liquidity Marketplace as a Shadow Chain}{31}{section.7}%
+\contentsline {section}{\numberline {7}Lightning Pool: A Channel Liquidity Marketplace as a Shadow Chain}{32}{section.7}%
 \contentsline {subsection}{\numberline {7.1}Instantiating a CLM}{32}{subsection.7.1}%
 \contentsline {subsubsection}{\numberline {7.1.1}System Initialization}{32}{subsubsection.7.1.1}%
 \contentsline {subsubsection}{\numberline {7.1.2}Lightning Pool Accounts}{33}{subsubsection.7.1.2}%
