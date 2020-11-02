@@ -2400,7 +2400,7 @@ our implementation of the market clearing algorithms:
         \t \texttt{orderPair.maker.balance} \mathrel{{+}{=}} \texttt{lease.premium} \\ \\
         \t \texttt{orderPair.taker.balance} \mathrel{{-}{=}} \texttt{exeFee(lease.amt)} \\
         \t \texttt{orderPair.maker.balance} \mathrel{{-}{=}} \texttt{exeFee(lease.amt)} \\
-        \t \texttt{$\Psi_{A}$.balance} \mathrel{{+}{=}} 2 \times \texttt{exeFee(lease.amt)} \\ \\
+        \t \texttt{$\Psi_{A}$.balance} \mathrel{{+}{=}} 2 \cdot \texttt{exeFee(lease.amt)} \\ \\
         \t \texttt{leases} \gets \texttt{leases} \cup \texttt{lease} \\
         \t \texttt{accts[orderPair.taker]} \gets \texttt{orderPair.taker} \\
         \t \texttt{accts[orderPair.maker]} \gets \texttt{orderPair.maker} \\ \\
