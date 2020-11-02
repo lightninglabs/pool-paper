@@ -655,7 +655,7 @@ instrument.
 \section{Bootstrapping Problems as Solved by CLM}
 
 Prior to outlining our design for a channel lease marketplace, we seek to
-provide a set of real-world cases that ddemonstrate the benefit of such markets
+provide a set of real-world cases that demonstrate the benefit of such markets
 for the Lightning Network. 
 
 \subsection{Bootstrapping New Users via Sidecar Channels}
@@ -682,7 +682,7 @@ accordingly for his role in the protocol.
 \subsection{Demand Fueled Routing Node Channel Selection}
 
 A "routing" node on the Lightning Network is a node categorized as having a
-persisten, publicly reachable Internet address, a set of inbound channels from
+persistent, publicly reachable Internet address, a set of inbound channels from
 leaf nodes, and an intention to actively facilitate payment flows on the
 network in return for fee revenue. A common question asked in the initial
 bootstrapping phase of the Lighting Network by node operators is: "where should
@@ -2133,9 +2133,9 @@ penalize the renegading party.
     \textbf{Channel Lease Funding Protocol}
 \end{center}
 
-Given the existence of a new modified chanenl $C_{L}$ that supports the channel
+Given the existence of a new modified channel $C_{L}$ that supports the channel
 lease protocol, we require a new way to fund the channels as a channel
-lease itself will \emph{partially-bind} the following paramters of a given
+lease itself will \emph{partially-bind} the following parameters of a given
 channel:
 \begin{itemize}
     \item The size of the channel itself.
@@ -2189,7 +2189,7 @@ generated after market clearing, and during the construction of the batch
 execution transaction. The \texttt{leasePoint} as it exists on the batch
 execution transaction creates a new channel point that satisfies the details of
 the negotiated channel lease $\Gamma$: the amount of the lease, and the
-pkSCript of the two multi-sig keys $P_a$ and $P_b$.
+pkScript of the two multi-sig keys $P_a$ and $P_b$.
 
 We note that the channel shim abstraction has a number of independent uses
 including strong layer isolation for more elaborate multi-party channel
@@ -2368,7 +2368,7 @@ algorithm:
 
 We note that several optimizations here are possible to reduce the worst-case
 running time of the algorithm which we leave open for future work. We also
-assume that the set of valid orders has been flittered out before being passed
+assume that the set of valid orders has been filtered out before being passed
 into this algorithm based on the current target batch fee rate and the posted
 max batch fee rate of each order.
 
@@ -2439,7 +2439,7 @@ batch before they sign off on it.
 
 A given batch transaction contains the following inputs: the set of trader
 account inputs involved in the batch, and the input of the master auctioneer
-itself. In addition to these inputs which can only eb spent each each user
+itself. In addition to these inputs which can only be spent each each user
 authorized the proposed batch, we also add the following outputs: a trader's
 new incremented account output which reflects the market clearing, the set of
 channels created as part of the channel lease, and the incremented auctioneer
@@ -2709,7 +2709,7 @@ The \texttt{ExecuteBatch} algorithm does most of the heavy lifting here. Note
 that if for whatever reason, execution fails, then $b=0$ is returned, and we
 resume our normal state machine execution loop. At the end of the
 \texttt{CommitBlock} algorithm all participants have the latest block (as they
-need to be given thee block in order to sign off on it), and the block is
+need to be given the block in order to sign off on it), and the block is
 broadcast to the Bitcoin blockchain. After this phase, it's possible to
 continue committing new blocks without waiting for prior blocks to confirm. Due
 to this flexibility, the Orchestrator of the Lightning Pool shadow chain is
@@ -2739,7 +2739,7 @@ consecutive market clearing opportunities:
 
 For brevity, we omit the referenced internal algorithms, however the naming is
 intended to be intuitive. Given a series of blocks $F$, we need to extract all
-thee inputs referenced in each block (the series of accounts), extract the set
+the inputs referenced in each block (the series of accounts), extract the set
 of all leases created within the block, and also the ending account state of
 all accounts involved in the prior blocks. Note that one account may
 participate in all or some of the prior blocks. The process of block
