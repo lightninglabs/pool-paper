@@ -132,7 +132,7 @@ all forwards independent of payment size, and a fee rate or proportional amount
 that must be paid for each millionth of a satoshi forwarded \cite{bolt7}. We
 refer to nodes that join in order to facilitate payments and collect forwarding
 fees as \emph{routing nodes}. In order to forward a payment of size $N$ on the
-network, a routing node needs to have $N_{in} + F$ Bitcoin allocated
+network, a routing node needs to have $N_{in} = N_{out} + F$ Bitcoin allocated
 \emph{towards} it as inbound bandwidth, and $N_{out}$ Bitcoin allocated to
 another node as outbound bandwidth. The factor of $F$ is the fee collected by
 the routing node, with the following constraint being met $F = N_{in} -
@@ -1503,7 +1503,7 @@ First, we define the core components of the shadowchain.
     \item $U_{L} = \{\phi_i, \cdots, \phi_n\}$ is the set of non-expired
         \texttt{Lifted UTXO}s observed by the orchestrator.
 
-    \item $U_{0}$ is the current UTXO of the orchestrator, where they may
+    \item $U_{O}$ is the current UTXO of the orchestrator, where they may
         accrue application level fees.
 
     \item $\Delta_F =  \{ \Delta_{f_0}, \cdots, \Delta_{f_n} \}$ is the set of
@@ -1547,7 +1547,7 @@ initialized. This process results in the creation of the orchestrator's
 long-term public key, the execution environment, and the set of state
 transition functions: \\
 
-\texttt{InitChain($1^{\lambda}$)} $\rightarrow$ $(U_{0}, P_{0}, \Delta_F,
+\texttt{InitChain($1^{\lambda}$)} $\rightarrow$ $(U_{O}, P_{O}, \Delta_F,
 E_{exe})$. Given the security parameter $\lambda$ (expressed in unary), the
 \texttt{InitChain} method returns the initial self-lifted UTXO of the
 orchestrator, the long-term public key of the orchestrator, and the set of
@@ -1565,18 +1565,19 @@ can begin lifting their UTXOs, enabling participation in shadowchain blocks and
 operations. The process of entering the shadowchain is referred to as UTXO
 Lifting, while exiting is the reverse process: \\
 
-\texttt{LiftUTXO($T_{expiry}, \{U_{N_0}, \ldots, U_{N_n}\}, P_{0}$)}
+\texttt{LiftUTXO($T_{expiry}, \{U_{N_0}, \ldots, U_{N_n}\}, P_{O}$)}
 $\rightarrow$ $\phi_{U}$. The \texttt{LiftUTXO} algorithm takes a series of
 normal UTXOs ($U_N$), the absolute expiration height of the UTXO, and the
-long-term public key of the orchestrator $P_{0}$, outputting a new
+long-term public key of the orchestrator $P_{O}$, outputting a new
 \texttt{Lifted UTXO} for the target user. The total value of the set of input
 UTXOs must be greater-than-or-equal to the value of the resulting
 \texttt{Lifted UTXO}. \\
 
 \texttt{ExitChain($\phi_{U}, B_{height}$)} $\rightarrow$ $U_{N}$. Given a
 lifted UTXO with expiration height $T_{expiry} > B_{height}$, where
-$B_{height}$, the \texttt{ExitChain} method spends an existing lifted UTXO and
-resolves the user's funds in a regular unencumbered UTXO. Users will use this
+$B_{height}$ is the block height at which the user wishes to exit the chain, the
+\texttt{ExitChain} method spends an existing lifted UTXO and resolves the user's
+funds in a regular unencumbered UTXO. Users will use this
 algorithm if they wish to exit the chain in cases where the orchestrator is no
 longer being responsive. \\
 
@@ -1604,7 +1605,7 @@ belonging to the live UTXOs, the execution environment, and the current set of
 valid state transition functions, the \texttt{ConstructBlock} outputs a valid
 shadowchain block to extend the main chain where: 
 \begin{itemize}
-    \item $\phi_{live} = live(\{\phi_{U_0}, \cdots, \phi_{U_N}\}$ is the set of
+    \item $\phi_{live} = live(\{\phi_{U_0}, \cdots, \phi_{U_N}\})$ is the set of
         'live' Lifted UTXOs where the $live$ algorithm uses a heartbeat-like
         protocol to detect the current set of active users.
 
@@ -1649,8 +1650,8 @@ Bitcoin blockchain: \\
 \texttt{CommitBlock} takes a valid shadowchain block, and attempts to obtain
 all necessary witnesses to unlock the Lifted UTXOs to re-create them post state
 function application along with any new application-specific UTXOs. The
-algorithm returns $b=1$ if the operator was able to succesfully obtain all
-necessary witnesses, and brodcasts the Bitcoin transaction that commits the
+algorithm returns $b=1$ if the operator was able to successfully obtain all
+necessary witnesses, and broadcasts the Bitcoin transaction that commits the
 shadowchain block. Otherwise, the operator may need to re-propose a new block
 to a subset of the live Lifted UTXOs.
 
@@ -1701,7 +1702,7 @@ $\rightarrow$ $\bot$. The \texttt{UpgradeChain} is an algorithm that's executed
 entirely in an off-chain manner allowing the operator of the shadowchain to
 upgrade some or all of: the application transaction data, the execution
 environment, and the set of state transition functions. Due to the nature of
-the shadowchain, users of this new functionality each user must update their
+the shadowchain, each user of this new functionality must update their
 local state. However, note that the Lifted UTXO remains the same, as the
 operator's long-term public key remains unchanged.
 
@@ -1803,7 +1804,7 @@ low-level. We first begin by detailing our implementation of the \texttt{CLM}
 algorithms, as well as our choice of certain free parameters. With this
 concrete structure in place, we'll then go up a layer of abstraction to
 demonstrate how Lightning Pool can be operated as a shadowchain on Bitcoin
-today, without any further modifications enhancements.
+today, without any further modifications or enhancements.
 
 \subsection{Instantiating a CLM}
 
@@ -2174,7 +2175,7 @@ being the \texttt{Liquidity Taker} and Bob being the \texttt{Liquidity Maker}:
 
 In this modified flow, notice that the taker returns the \emph{pre-generated}
 public key to use within the multi-sig within the \texttt{AcceptChannel}
-method, and the taker uses the canned \texttt{leasePoint} as the input to the
+method, and the maker uses the canned \texttt{leasePoint} as the input to the
 funding transaction. As we'll see below the \texttt{leasePoint} itself is
 generated after market clearing, and during the construction of the batch
 execution transaction. The \texttt{leasePoint} as it exists on the batch
@@ -2224,7 +2225,7 @@ also require that all the backing Lightning nodes of the order also include a
 signature as well.  As the number of backing nodes for a given account may be
 numerous, rather than accepting individual signatures for each node, we instead
 require the account operator and all backing nodes to present a \emph{single}
-Schnorr signature. As we also want have our order tagging scheme be secure
+Schnorr signature. As we also want to have our order tagging scheme be secure
 against key rogue-key attacks, we select the \texttt{MuSig2} multi-signature
 scheme \cite{muSig}. \\
 
@@ -2268,7 +2269,7 @@ uses outside of order cancellation.
 \subsubsection{Node Rating Agencies}
 
 Recalling the set of initial requirements that were set our in section 4, it's
-critical that Lightning Pool reduces information symmetry for the buyer by
+critical that Lightning Pool reduces information asymmetry for the buyer by
 allowing them to gauge the quality of the node selling a channel lease before
 they enter into an agreement. In order to achieve this, we introduce the
 concept of a Node Rating Agency. An rating's agency will allow the buyer of a
@@ -2320,7 +2321,7 @@ Pool.
 \end{center}
 
 As mentioned, due to the set of additional constraints outside of simply the
-posted price and available supply, we employ a multi-attribute mach making
+posted price and available supply, we employ a multi-attribute match making
 algorithm. Specifically we opt to utilize a greedy algorithm for the purpose of
 match making, rather than attempt to find an optimal solution using
 techniques such as mixed integer linear programming. In this section, we focus
@@ -2430,7 +2431,7 @@ batch before they sign off on it.
 
 A given batch transaction contains the following inputs: the set of trader
 account inputs involved in the batch, and the input of the master auctioneer
-itself. In addition to these inputs which can only be spent each each user
+itself. In addition to these inputs which can only be spent once each user has
 authorized the proposed batch, we also add the following outputs: a trader's
 new incremented account output which reflects the market clearing, the set of
 channels created as part of the channel lease, and the incremented auctioneer
@@ -2514,10 +2515,10 @@ insight with respect to the meaning of each of the messages sent above.
         by sending the \texttt{BatchAccept} message.
 
     \item In order to synchronize the creation of funding shims and the channel
-        funding protocol itself, the auctioneer send the
-        \texttt{BatchSignBegin} message. After sending the reject, the
-        \emph{taker} will register a funding shim to ensure it's able to
-        properly handle the incoming funding request in the next phase.
+        funding protocol itself, the auctioneer sends the
+        \texttt{BatchSignBegin} message. After sending the  \texttt{BatchAccept} 
+        message, the \emph{taker} will register a funding shim to ensure it's 
+        able to properly handle the incoming funding request in the next phase.
 
     \item Upon receipt of the \texttt{BatchSignBegin} message, the client then
         is ready to fund the channel, using the \texttt{leasePoint} which is
@@ -2527,7 +2528,7 @@ insight with respect to the meaning of each of the messages sent above.
         transaction), then the trader will sign its input to present a valid
         signature to the auctioneer, so the batch transaction can be completed.
 
-    \item The final set for the auctioneer is to commit the new batch to disk,
+    \item The final step for the auctioneer is to commit the new batch to disk,
         and broadcast the transaction to the Bitcoin network.
 \end{itemize}
 
@@ -2634,14 +2635,14 @@ operations required to create, modify or close an account:
     }
 
     \procedure[linenumbering,syntaxhighlight=auto, addkeywords={map, filter}]{\texttt{UnliftUTXO($\Psi_{U}$)}}{
-        (b, _) \gets \texttt{ModifyAccount($\Psi_{U}, P_{auction_p}$)} \\
+        (b, \_) \gets \texttt{ModifyAccount($\Psi_{U}, P_{auction_p}$)} \\
         return b
     }
 
     \procedure[linenumbering,syntaxhighlight=auto, addkeywords={map, filter}]{\texttt{ExitChain($\phi_{U}, B_{height}$)}}{
         if \phi_{U}.T_{blocks} < B_{height}: \\
         \t return 0 \\
-        (b, _) \gets \texttt{ModifyAccount($\Psi_{U}, P_{auction_p}$)} \\
+        (b, \_) \gets \texttt{ModifyAccount($\Psi_{U}, P_{auction_p}$)} \\
         return b
     }
 \end{pcvstack}
@@ -2768,7 +2769,7 @@ execution transaction itself.
 
 \section{Security Analysis}
 
-Similar to Lightning Loop, the Lightning Pool backend server is may be closed
+Similar to Lightning Loop, the Lightning Pool backend server is closed
 source, but clients are able to fully verify and audit each phase of the
 auction. At a high level, Pool can be seen as a “shadow chain” anchored in the
 base Bitcoin blockchain. The shadow chain validates modifications to a subset
